@@ -72,7 +72,7 @@
 
         <main class="flex-1 p-6 md:p-10 overflow-auto">
             
-            <!-- Day 1: The Ecosystem (Expanded with new content) -->
+            <!-- Day 1: The Ecosystem (Expanded with Iterative OpMode) -->
             <div id="day1" class="content-card">
                 <h2 class="text-4xl font-bold mb-2">Day 1: Hello Robot! The FTC Ecosystem</h2>
                 <p class="text-lg text-stone-600 mb-4">An introduction to the FTC ecosystem, the structure of an OpMode, and how the robot communicates with the driver. Today, we focus on setting up the environment and understanding the **flow of a match** from the code's perspective.</p>
@@ -84,18 +84,8 @@
                     <h4 class="font-semibold mt-2">What is Programming?</h4>
                     <p class="mb-3">Programming means giving the robot **instructions it can follow exactly**. The language we use to communicate with the robot brain (**Control Hub**) is **Java**.</p>
                     
-                    <h4 class="font-semibold mt-2">Basic Java Structure</h4>
-                    <p class="mb-3">In standard Java, every file defines a **class** that holds code. The program always starts running inside the special **`main()`** method.</p>
-                    <pre class="ftc-code"><code>public class HelloWorld {
-    // This is the starting point for standard Java programs
-    public static void main(String[] args) {
-        System.out.println("Hello, FTC!"); // prints text to console
-    }
-}
-// 'public' means it can be accessed anywhere. 'class' is the blueprint for your code.</code></pre>
-
-                    <h4 class="font-semibold mt-4">How FTC Java Works (The Key Difference)</h4>
-                    <p>FTC programs **don't use `main()`!** Instead, they **extend** special classes like `LinearOpMode` and use the built-in `runOpMode()` method as their starting point. The FTC system (the Control Hub) handles the startup process for you.</p>
+                    <h4 class="font-semibold mt-2">How FTC Java Works (The Key Difference)</h4>
+                    <p>FTC programs **don't use `main()`!** Instead, they **extend** special classes like `LinearOpMode` or `OpMode` and use pre-defined methods (`runOpMode`, `init`, `loop`) as their starting point. The FTC system (the Control Hub) handles the startup process for you.</p>
 
                     <h4 class="font-semibold mt-4">The Control System Overview</h4>
                     <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
@@ -107,32 +97,44 @@
                 <!-- END NEW CONTENT BLOCK -->
 
 
-                <!-- OpMode Definition Block (Enhanced) -->
+                <!-- OpMode Definition Block -->
                 <div class="bg-orange-50 p-6 rounded-xl border border-orange-200 mb-8">
-                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">2. What Exactly is an OpMode?</h3>
-                    <p class="mb-4">Think of an **OpMode** (short for Operational Mode) as the **Game Mode** for your robot. The FTC system requires you to pick one OpMode file to run for the match.</p>
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">2. The Two OpMode Flavors: Linear vs. Iterative</h3>
+                    <p class="mb-4">FTC provides two main templates for writing code. They achieve the same goal but organize the flow differently.</p>
                     
-                    <h4 class="font-semibold mt-2">Why Do We Need OpModes? (The Two-Part Match)</h4>
-                    <p>FTC matches have two completely different phases, and your robot needs different instructions for each one. You need OpModes to separate these actions:</p>
-                    <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
-                        <li><strong>Autonomous (Auto) OpMode:</strong> This code is like a **script**. It runs by itself for 30 seconds with **no** driver input. The code runs one line after the other, moving the robot precisely.</li>
-                        <li><strong>TeleOp OpMode:</strong> This code is like a **live driver**. It runs continuously for 2 minutes, constantly checking the joysticks and immediately setting motor power based on the drivers' commands.</li>
-                    </ul>
-                    <h4 class="font-semibold mt-4">Analogy: The Remote Control</h4>
-                    <p class="text-sm text-stone-600">Imagine your robot is a TV. An Autonomous OpMode is like pressing **"Channel 5"**—it's a single command that runs until complete. A TeleOp OpMode is like holding down the **"Volume Up"** button—it runs constantly as long as you keep pressing it. They are completely different types of control, so they need two different code files (OpModes).</p>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <div class="p-3 border border-orange-300 rounded-lg bg-white flex-1">
+                            <p class="font-bold text-lg text-orange-600">Linear OpMode (Easy to Read Script)</p>
+                            <ul class="list-disc list-inside ml-4 mt-2 text-sm">
+                                <li>Extends: **`LinearOpMode`**</li>
+                                <li>Code lives in: **`runOpMode()`** method.</li>
+                                <li>Flow Control: Uses **`waitForStart()`** and a single **`while (opModeIsActive())`** loop.</li>
+                                <li>Best for: **Autonomous** (step-by-step scripts).</li>
+                            </ul>
+                        </div>
+                        <div class="p-3 border border-orange-300 rounded-lg bg-white flex-1">
+                            <p class="font-bold text-lg text-orange-600">Iterative OpMode (State Machine)</p>
+                            <ul class="list-disc list-inside ml-4 mt-2 text-sm">
+                                <li>Extends: **`OpMode`**</li>
+                                <li>Code is split into: **`init()`, `start()`, `loop()`, `stop()`** methods.</li>
+                                <li>Flow Control: The system calls the methods automatically.</li>
+                                <li>Best for: **TeleOp** (constant, repetitive checks).</li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
                 <!-- End OpMode Definition Block -->
 
 
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-xl border border-stone-200">
-                        <h3 class="text-2xl font-semibold mb-4">3. The FTC Control Flow and Telemetry</h3>
-                        <p class="mb-4">The core of any FTC program (like the sample **BasicOpMode_Linear**) involves three key flow control points that manage the match timer. Scroll down in the code sample below to see how the three phases of a match are separated.</p>
+                        <h3 class="text-2xl font-semibold mb-4">3. Linear OpMode Structure (The Script)</h3>
+                        <p class="mb-4">This structure uses a single method, **`runOpMode()`**, which executes code from top to bottom like a script. The `waitForStart()` and the `while` loop act as the major flow control points.</p>
                         
                         <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200 mb-2">
-                            <button class="accordion-header w-full text-left p-4 font-semibold">Sample: BasicOpMode_Linear Code Structure</button>
+                            <button class="accordion-header w-full text-left p-4 font-semibold">Sample: BasicOpMode_Linear</button>
                             <div class="accordion-content px-4 pb-4">
-                                <p class="mb-2">This simplified sample shows the **`INIT`**, **`WAITING`**, and **`RUN`** phases of the robot's life, all within the required **`runOpMode()`** method.</p>
+                                <p class="mb-2">The three phases of the match are separated by the flow control methods.</p>
                                 <pre class="ftc-code"><code>@TeleOp(name="Basic Linear OpMode", group="Linear OpModes")
 public class BasicOpMode_Linear extends LinearOpMode {
 
@@ -140,52 +142,88 @@ public class BasicOpMode_Linear extends LinearOpMode {
     public void runOpMode() {
         
         // --- 1. INIT STAGE (Runs once when INIT is pressed) ---
-        // This is where you map hardware and set initial directions.
+        // Hardware mapping and initial telemetry goes here.
         telemetry.addData("Status", "Initialized");
         telemetry.update();
 
         // --- 2. WAITING STAGE (Pauses until START is pressed) ---
         waitForStart();
         
-        // This check ensures we only proceed if the user hasn't pressed STOP
         if (opModeIsActive()) {
 
             // --- 3. RUN STAGE (This loop runs continuously for the match duration) ---
             while (opModeIsActive()) {
                 
-                // Get joystick input (example for a drive system)
                 double drive = -gamepad1.left_stick_y; 
-                
-                // In a real OpMode, motor power would be set here
                 // motor.setPower(drive); 
 
-                // Send data to the Driver Station
                 telemetry.addData("Status", "Running");
-                telemetry.addData("Drive Power", drive);
                 telemetry.update(); // CRITICAL: Sends data to the driver station
             }
         }
-        // When the loop exits (by pressing STOP), the OpMode finishes.
+        // OpMode finishes here when the loop exits (by pressing STOP).
     }
 }</code></pre>
 
                                 <h4 class="font-semibold mt-4">Telemetry: Real-time Debugging</h4>
-                                <p><strong>Telemetry</strong> is your robot's way of talking to you. It sends data (like motor power, sensor values, and program status) to the Driver Station phone. You must call **`telemetry.update()`** to transmit the data over the Wi-Fi network.</p>
+                                <p><strong>Telemetry</strong> is your robot's way of talking to you. It sends data to the Driver Station phone. You must call **`telemetry.update()`** to transmit the data over the Wi-Fi network.</p>
                             </div>
                         </div>
                     </div>
 
                     <div class="bg-white p-6 rounded-xl border border-stone-200">
-                        <h3 class="text-2xl font-semibold mb-4">OpMode Lifecycle Diagram (Linear)</h3>
-                        <p class="text-sm text-stone-500 mb-4">Click each stage to learn what the robot is doing and what code is run.</p>
-                        <div id="lifecycle-diagram" class="flex flex-col sm:flex-row justify-around items-center gap-2 font-mono text-sm">
-                            <div data-desc="INIT: Code runs once when you press the INIT button. This is where you map hardware (motors/servos) and set initial positions." class="lifecycle-stage cursor-pointer text-center p-4 border-2 border-transparent rounded-lg bg-stone-100 w-full">INIT</div>
-                            <div class="text-stone-400 font-sans">&rarr;</div>
-                            <div data-desc="WAITING: The program pauses here after initialization until the START button is pressed. This is your cue to finalize preparations. This is what 'waitForStart()' does." class="lifecycle-stage cursor-pointer text-center p-4 border-2 border-transparent rounded-lg bg-stone-100 w-full">waitForStart()</div>
-                            <div class="text-stone-400 font-sans">&rarr;</div>
-                            <div data-desc="RUN: Code after waitForStart() executes. In TeleOp, this is usually inside the 'while (opModeIsActive())' loop that runs until the match ends." class="lifecycle-stage cursor-pointer text-center p-4 border-2 border-transparent rounded-lg bg-stone-100 w-full">RUN</div>
+                        <h3 class="text-2xl font-semibold mb-4">4. Iterative OpMode Structure (The State Machine)</h3>
+                        <p class="mb-4">The **Iterative OpMode** is an event-driven system. Instead of a single continuous method, the FTC framework calls specific methods automatically at specific times:</p>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-sm">
+                            <li>**`init()`:** Called once when INIT is pressed.</li>
+                            <li>**`init_loop()`:** Called repeatedly while waiting for START (after `init()`).</li>
+                            <li>**`start()`:** Called once when START is pressed.</li>
+                            <li>**`loop()`:** Called repeatedly (about 50 times/sec) during the match.</li>
+                            <li>**`stop()`:** Called once when the match ends or STOP is pressed.</li>
+                        </ul>
+                        
+                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200">
+                            <button class="accordion-header w-full text-left p-4 font-semibold">Sample: Iterative OpMode</button>
+                            <div class="accordion-content px-4 pb-4">
+                                <p class="mb-2">The core logic for TeleOp always goes inside the **`loop()`** method.</p>
+                                <pre class="ftc-code"><code>@TeleOp(name="Iterative TeleOp", group="Iterative OpModes")
+public class BasicOpMode_Iterative extends OpMode {
+
+    // 1. INIT PHASE: Runs once when the INIT button is pressed
+    @Override
+    public void init() {
+        // Map hardware here (e.g., motor = hardwareMap.get(DcMotor.class, "motor");)
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+    }
+    
+    // 2. START PHASE: Runs once when the START button is pressed
+    @Override
+    public void start() {
+        // Any commands that should run only once at the start of the match
+    }
+
+    // 3. RUN PHASE: Runs repeatedly (the main loop) during the match
+    @Override
+    public void loop() {
+        
+        // Motor control and joystick checks happen here
+        double drive = -gamepad1.left_stick_y;
+        // motor.setPower(drive); 
+        
+        telemetry.addData("Drive Power", drive);
+        // NOTE: telemetry.update() is handled automatically in the Iterative OpMode's loop!
+    }
+
+    // 4. STOP PHASE: Runs once when the match ends or the STOP button is pressed
+    @Override
+    public void stop() {
+        // Stop all motors, clear resources
+        // motor.setPower(0);
+    }
+}</code></pre>
+                            </div>
                         </div>
-                        <p id="lifecycle-desc" class="mt-4 text-center bg-blue-50 text-blue-800 p-3 rounded-lg h-24 flex items-center justify-center transition-opacity duration-300 opacity-0"></p>
                     </div>
                 </div>
             </div>
@@ -606,15 +644,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Day 1 Lifecycle
     const lifecycleStages = document.querySelectorAll('.lifecycle-stage');
     const lifecycleDesc = document.getElementById('lifecycle-desc');
-    lifecycleStages.forEach(stage => {
-        stage.addEventListener('click', () => {
-            lifecycleStages.forEach(s => s.classList.remove('border-orange-500', 'bg-orange-100'));
-            stage.classList.add('border-orange-500', 'bg-orange-100');
-            lifecycleDesc.textContent = stage.dataset.desc;
-            lifecycleDesc.classList.remove('opacity-0');
-        });
-    });
-
+    // Note: Removed the interactive lifecycle diagram since the two OpMode structures 
+    // made a single diagram confusing. Replaced it with the detailed comparison.
+    
     // Encoder Calculator (Day 5)
     const distInput = document.getElementById('distance');
     const tprInput = document.getElementById('tpr');
@@ -658,8 +690,8 @@ document.addEventListener('DOMContentLoaded', () => {
             labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
             datasets: [{
                 label: 'Conceptual Complexity',
-                // Updated complexity: Higher numbers reflect the added depth and complexity of the new content
-                data: [3, 4, 5, 6, 8, 7, 9], 
+                // Complexity adjusted to account for the new OpMode comparison
+                data: [4, 4, 5, 6, 8, 7, 9], 
                 backgroundColor: 'rgba(234, 88, 12, 0.6)',
                 borderColor: 'rgba(234, 88, 12, 1)',
                 borderWidth: 1
