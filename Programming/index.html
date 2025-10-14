@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FTC Java Programming Interactive Guide</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Roboto+Mono&display=swap');
+        .font-mono { font-family: 'Roboto Mono', monospace; }
+        .content-card {
+            transform: translateY(20px);
+            opacity: 0;
+            animation: fadeIn 0.5s forwards;
+            display: none;
+        }
+        .content-card.active { display: block; }
+        @keyframes fadeIn {
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 40vh;
+        }
+        @media (min-width: 768px) {
+            .chart-container { height: 350px; }
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+        .ftc-code {
+            background-color: #272822; /* Dracula theme color */
+            color: #f8f8f2;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            font-size: 0.875rem;
+            font-family: 'Roboto Mono', monospace;
+        }
+    </style>
+</head>
+<body class="bg-stone-50 text-stone-800">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <aside class="w-full md:w-64 bg-white border-r border-stone-200 p-6 shrink-0">
+            <h1 class="text-xl font-bold text-orange-600">FTC Java Guide</h1>
+            <p class="text-sm text-stone-500 mt-1 mb-6">Interactive 7-Day Plan</p>
+            <nav id="main-nav">
+                <ul>
+                    <li><a href="#day1" class="nav-link text-lg font-medium p-3 rounded-lg flex items-center gap-3 transition-colors duration-200">Day 1: The Ecosystem</a></li>
+                    <li><a href="#day2" class="nav-link text-lg font-medium p-3 rounded-lg flex items-center gap-3 transition-colors duration-200">Day 2: Variables & Methods</a></li>
+                    <li><a href="#day3" class="nav-link text-lg font-medium p-3 rounded-lg flex items-center gap-3 transition-colors duration-200">Day 3: Data Types & Operators</a></li>
+                    <li><a href="#day4" class="nav-link text-lg font-medium p-3 rounded-lg flex items-center gap-3 transition-colors duration-200">Day 4: Control Flow & Loops</a></li>
+                    <li><a href="#day5" class="nav-link text-lg font-medium p-3 rounded-lg flex items-center gap-3 transition-colors duration-200">Day 5: Autonomous & Encoders</a></li>
+                    <li><a href="#day6" class="nav-link text-lg font-medium p-3 rounded-lg flex items-center gap-3 transition-colors duration-200">Day 6: Working with Sensors</a></li>
+                    <li><a href="#day7" class="nav-link text-lg font-medium p-3 rounded-lg flex items-center gap-3 transition-colors duration-200">Day 7: Advanced TeleOp Techniques</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <main class="flex-1 p-6 md:p-10 overflow-auto">
+            
+            <!-- Day 1: The Ecosystem (Expanded) -->
+            <div id="day1" class="content-card">
+                <h2 class="text-4xl font-bold mb-2">Day 1: Hello Robot! The FTC Ecosystem</h2>
+                <p class="text-lg text-stone-600 mb-4">An introduction to the FTC ecosystem, the structure of an OpMode, and how the robot communicates with the driver. Today, we focus on setting up the environment and understanding the **flow of a match** from the code's perspective.</p>
+                
+                <!-- New OpMode Definition Block -->
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200 mb-8">
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">What Exactly is an OpMode?</h3>
+                    <p class="mb-4">Think of an **OpMode** (short for Operational Mode) as the **Game Mode** for your robot. Just like a video game lets you choose between "Story Mode," "Multiplayer Mode," or "Training Mode," the FTC system requires you to pick an OpMode file to run.</p>
+                    
+                    <h4 class="font-semibold mt-2">Why Do We Need OpModes? (The Two-Part Match)</h4>
+                    <p>FTC matches have two completely different phases, and your robot needs different instructions for each one. You need OpModes to separate these actions:</p>
+                    <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
+                        <li><strong>Autonomous (Auto) OpMode:</strong> This code is like a **script**. It runs by itself for 30 seconds with **no** driver input. The code runs one line after the other, moving the robot precisely.</li>
+                        <li><strong>TeleOp OpMode:</strong> This code is like a **live driver**. It runs continuously for 2 minutes, constantly checking the joysticks and immediately setting motor power based on the drivers' commands.</li>
+                    </ul>
+                    <h4 class="font-semibold mt-4">Analogy: The Remote Control</h4>
+                    <p class="text-sm text-stone-600">Imagine your robot is a TV. An Autonomous OpMode is like pressing **"Channel 5"**—it's a single command that runs until complete. A TeleOp OpMode is like holding down the **"Volume Up"** button—it runs constantly as long as you keep pressing it. They are completely different types of control, so they need two different code files (OpModes).</p>
+                </div>
+                <!-- End New OpMode Definition Block -->
+
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">The FTC Control System & Telemetry</h3>
+                        <p class="mb-4">The **Control Hub** is an Android computer. Our Java code, once compiled, runs directly on it. This code is packaged into an **OpMode** file.</p>
+                        
+                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200 mb-2">
+                            <button class="accordion-header w-full text-left p-4 font-semibold">OpModes: Linear vs. Iterative</button>
+                            <div class="accordion-content px-4 pb-4">
+                                <p><strong>LinearOpMode (Beginner Friendly):</strong> This is a simple, sequential script. It runs top-to-bottom. We use **`sleep(milliseconds)`** to pause the robot for precise timed movements in autonomous.</p>
+                                <p class="mt-2"><strong>IterativeOpMode (Advanced):</strong> This is event-driven. Code is split into methods like `init()`, `start()`, and `loop()`. The **`loop()`** method is called repeatedly by the system, about 50 times per second. This is best for complex TeleOp controls.</p>
+                            </div>
+                        </div>
+                         <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200">
+                            <button class="accordion-header w-full text-left p-4 font-semibold">Telemetry: Real-time Debugging</button>
+                            <div class="accordion-content px-4 pb-4">
+                                <p>Telemetry is your robot's way of talking to you. It sends data to the Driver Station phone so you can monitor motor power, sensor values, and program status. **Always use telemetry** to debug your code.</p>
+                                <h4 class="font-semibold mt-2">Example: Displaying Data</h4>
+                                <pre class="ftc-code"><code>// Display the string "Status" and the string "Ready to Run"
+telemetry.addData("Status", "Ready to Run");
+
+// Display the motor's current power setting
+telemetry.addData("Left Motor Power", leftMotor.getPower());
+
+// !!! CRITICAL: You must call update() to send the data to the Driver Station
+telemetry.update();</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">OpMode Lifecycle Diagram (Linear)</h3>
+                        <p class="text-sm text-stone-500 mb-4">Click each stage to learn what the robot is doing and what code is run.</p>
+                        <div id="lifecycle-diagram" class="flex flex-col sm:flex-row justify-around items-center gap-2 font-mono text-sm">
+                            <div data-desc="INIT: Code runs once when you press the INIT button. This is where you map hardware (motors/servos) and set initial positions." class="lifecycle-stage cursor-pointer text-center p-4 border-2 border-transparent rounded-lg bg-stone-100 w-full">INIT</div>
+                            <div class="text-stone-400 font-sans">&rarr;</div>
+                            <div data-desc="WAITING: The program pauses here after initialization until the START button is pressed. This is your cue to finalize preparations." class="lifecycle-stage cursor-pointer text-center p-4 border-2 border-transparent rounded-lg bg-stone-100 w-full">waitForStart()</div>
+                            <div class="text-stone-400 font-sans">&rarr;</div>
+                            <div data-desc="RUN: Code after waitForStart() executes. In Autonomous, this code runs sequentially. In TeleOp, this is usually wrapped in a 'while' loop." class="lifecycle-stage cursor-pointer text-center p-4 border-2 border-transparent rounded-lg bg-stone-100 w-full">RUN</div>
+                        </div>
+                        <p id="lifecycle-desc" class="mt-4 text-center bg-blue-50 text-blue-800 p-3 rounded-lg h-24 flex items-center justify-center transition-opacity duration-300 opacity-0"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 2: Variables & Methods -->
+            <div id="day2" class="content-card">
+                <h2 class="text-4xl font-bold mb-2">Day 2: Variables, Methods, & Hardware Mapping</h2>
+                <p class="text-lg text-stone-600 mb-4">We are diving into the basic building blocks of Java: **variables** (to store data) and **methods** (to perform actions). We'll focus heavily on how these concepts apply to connecting to your physical hardware.</p>
+                <p class="mb-8">A **variable** must be declared with a **Type** (like `DcMotor` or `double`) so the Java compiler knows what kind of data it will hold and what actions it can perform.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                     
+                    <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">1. Variables and Hardware Mapping</h3>
+                        <p class="mb-4">**Hardware Mapping** is the process of linking a variable in your code to a physical device plugged into the Control Hub. We use the special **`hardwareMap`** object to look up the device by the name you set in the configuration.</p>
+                        
+                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200 mb-4">
+                            <button class="accordion-header w-full text-left p-4 font-semibold">Example: Mapping a Motor and a Servo</button>
+                            <div class="accordion-content px-4 pb-4">
+                                <p>Notice how we use **`.get(Type.class, "name")`**. The Type tells Java what kind of device to expect, and the name must match your configuration exactly.</p>
+                                <pre class="ftc-code"><code>// 1. DECLARE the variables (fields) outside the main method
+private DcMotor leftMotor = null; // DcMotor is the type for drive motors
+private Servo clawServo = null; // Servo is the type for continuous or standard servos
+
+// 2. INITIALIZE the variables inside the init/runOpMode method
+leftMotor = hardwareMap.get(DcMotor.class, "left_drive");
+clawServo = hardwareMap.get(Servo.class, "claw");
+
+// 3. Set Motor Direction (Crucial!)
+// This ensures setting a positive power moves the robot forward.
+leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);</code></pre>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">2. Methods: Actions for the Robot</h3>
+                        <p class="mb-4">Methods are like commands. A **`DcMotor`** variable has many methods (actions) built into it, like `setPower()` or `setTargetPosition()`. You call a method using the **dot operator (`.`)** after the variable name.</p>
+                        
+                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200">
+                            <button class="accordion-header w-full text-left p-4 font-semibold">FTC Example: Motor vs. Servo Control</button>
+                            <div class="accordion-content px-4 pb-4">
+                                <p>Motors use `setPower()` (ranging from -1.0 to 1.0) for continuous movement, while Servos use `setPosition()` (ranging from 0.0 to 1.0) for angular position.</p>
+                                <pre class="ftc-code"><code>// Action 1: Motor Power (Robot driving forward)
+leftMotor.setPower(0.75); // 75% power forward
+
+// Action 2: Servo Position (Claw closing)
+clawServo.setPosition(0.2); // Setting position to 0.2 (e.g., closed)
+
+// Action 3: Stopping a motor
+leftMotor.setPower(0.0); // Power of 0.0 stops the motor immediately</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 3: Data Types & Operators -->
+            <div id="day3" class="content-card">
+                <h2 class="text-4xl font-bold mb-2">Day 3: Data Types and Logical Operators</h2>
+                <p class="text-lg text-stone-600 mb-4">Data types tell Java what kind of information a variable holds. **Operators** are the mathematical and logical tools we use to change or compare that data. This is how we translate raw joystick input into usable motor values.</p>
+                <p class="mb-8">Understanding the difference between **`int`**, **`double`**, and **`boolean`** is key to avoiding calculation errors and writing robust conditions.</p>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                     
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">Fundamental Java Data Types in Robotics</h3>
+                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200 mb-4">
+                            <button class="accordion-header w-full text-left p-4 font-semibold">The Difference: `int` vs. `double`</button>
+                            <div class="accordion-content px-4 pb-4">
+                                <p><strong>`double` (Decimal):</strong> Use this for power settings, joystick values, and most sensor readings. If you use an `int` for division, Java will chop off the decimal part (**integer division**), which can lead to unexpected errors!</p>
+                                <pre class="ftc-code"><code>double scaledPower = gamepad1.left_stick_y * 0.4; // 0.4 is a double, result is double
+double voltage = 12.5;</code></pre>
+                                <p class="mt-2"><strong>`int` (Whole Number):</strong> Use for encoder counts, loop iteration numbers, or fixed thresholds.</p>
+                                <pre class="ftc-code"><code>int targetTicks = 538; // Ticks per revolution
+int scoreCount = 0;</code></pre>
+                            </div>
+                        </div>
+
+                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200">
+                            <button class="accordion-header w-full text-left p-4 font-semibold">`boolean` (True/False)</button>
+                            <div class="accordion-content px-4 pb-4">
+                                <p>A `boolean` holds a single piece of information: **`true`** or **`false`**. This is the result of any comparison or the state of a button/switch.</p>
+                                <pre class="ftc-code"><code>// The status of the B button press
+boolean bIsPressed = gamepad1.b;
+
+// A constant variable that defines a state
+final boolean IS_RED_ALLIANCE = true;</code></pre>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">Logical Operators: Making Complex Decisions</h3>
+                        <p class="mb-4">While arithmetic operators (`+`, `-`, `*`, `/`) handle math, **Logical Operators** (`&&`, `||`, `!`) combine or negate `boolean` conditions to make more sophisticated decisions.</p>
+                        
+                        <h4 class="font-semibold mt-2">1. Logical AND (`&&`)</h4>
+                        <p class="text-sm mb-2 text-stone-600">The result is `true` **only if** BOTH conditions are true.</p>
+                        <pre class="ftc-code"><code>// Safety Check: Only run the motor if the driver is holding the trigger (RT) 
+// AND the A button is NOT pressed (to prevent accidental movement)
+if (gamepad1.right_trigger > 0.1 && !gamepad1.a) {
+    // Drive code goes here
+}</code></pre>
+                        
+                        <h4 class="font-semibold mt-4">2. Logical OR (`||`) and NOT (`!`)</h4>
+                        <p class="text-sm mb-2 text-stone-600">`OR` is `true` if **EITHER** condition is true. `NOT` inverts a boolean value.</p>
+                        <pre class="ftc-code"><code>// Multi-Driver Control: Check if either driver 1's A or driver 2's X is pressed
+if (gamepad1.a || gamepad2.x) {
+    // Close the claw
+}
+
+// Logical NOT: Check if the motor is NOT busy (i.e., it has reached its target)
+if (!leftMotor.isBusy()) {
+    // Safe to start the next action
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 4: Control Flow & Loops -->
+            <div id="day4" class="content-card">
+                <h2 class="text-4xl font-bold mb-2">Day 4: Control Flow: Decisions & Repetition</h2>
+                <p class="text-lg text-stone-600 mb-4">Control flow dictates the order in which your program executes its instructions. We use **conditional statements (`if/else`)** to make decisions and **loops (`while`)** to perform repetitive, ongoing tasks, which is the heart of TeleOp.</p>
+                <p class="mb-8">Mastering the `while` loop is essential because your entire 2-minute TeleOp period runs inside one!</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">Conditional Logic: `if/else if/else`</h3>
+                        <p class="mb-4">This structure allows the robot to handle **mutually exclusive** actions—if one condition is true, the others are ignored. This is critical for prioritizing actions, like stopping a lift motor once it hits a sensor *or* if the driver is manually trying to lower it.</p>
+                        <h4 class="font-semibold">FTC Example: Prioritizing Lift Control</h4>
+                        <pre class="ftc-code"><code>// Assuming 'liftLimit' is a touch sensor (returns false when pressed)
+// 'liftMotor' is a motor
+double LIFT_UP_POWER = 0.8;
+
+if (gamepad2.right_bumper) {
+    // Highest Priority: Driver wants to lift
+    liftMotor.setPower(LIFT_UP_POWER);
+} else if (gamepad2.left_bumper) {
+    // Second Priority: Driver wants to lower
+    liftMotor.setPower(-LIFT_UP_POWER * 0.5); // Lower slower for safety
+} else if (liftLimit.getState() == false) {
+    // Sensor Priority: Limit switch is pressed (arm is fully down)
+    // Only stop if the driver isn't actively trying to move it
+    liftMotor.setPower(0);
+} else {
+    // Default Action: If nothing is being pressed or triggered, stop the motor
+    liftMotor.setPower(0);
+}</code></pre>
+                    </div>
+                    
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">Repetition: The TeleOp Heartbeat (`while` loop)</h3>
+                        <p class="mb-4">The **`while (opModeIsActive())`** loop is the "heartbeat" of your TeleOp program. It runs constantly, checking the gamepads, updating motor powers, and sending telemetry about 50 times per second.</p>
+                        <h4 class="font-semibold">FTC Example: The Full TeleOp Structure</h4>
+                        <p class="text-sm mb-2 text-stone-600">The crucial detail is that the loop **only executes** if `opModeIsActive()` returns `true` (meaning the match is running and no stop button has been pressed).</p>
+                        <pre class="ftc-code"><code>// 1. Initial setup and hardware mapping (INIT stage)
+telemetry.addData("Status", "Initialized");
+telemetry.update();
+
+waitForStart(); // 2. Pause and wait for the START button
+
+// 3. RUN stage: Start the TeleOp heartbeat loop
+while (opModeIsActive()) {
+    
+    // Read joystick input for tank drive
+    double leftDrive = -gamepad1.left_stick_y;
+    double rightDrive = -gamepad1.right_stick_y;
+    
+    // Apply power
+    leftMotor.setPower(leftDrive);
+    rightMotor.setPower(rightDrive);
+    
+    // Update telemetry frequently to monitor joystick values
+    telemetry.addData("Left Stick Y", leftDrive);
+    telemetry.addData("Right Stick Y", rightDrive);
+    telemetry.update();
+} 
+// When the match ends, the loop condition fails, and the OpMode finishes.</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 5: Autonomous & Encoders -->
+            <div id="day5" class="content-card">
+                <h2 class="text-4xl font-bold mb-2">Day 5: Driving with Purpose: Motor Encoders</h2>
+                <p class="text-lg text-stone-600 mb-4">Autonomous (Auto) must be precise. Using **time-based movement** (e.g., `sleep(2000)`) is unreliable because battery power and friction change. **Motor Encoders** solve this by tracking the motor shaft's exact rotation in "ticks."</p>
+                <p class="mb-8">Encoders allow you to define a target distance and let the Control Hub's firmware handle the driving and stopping. This is done using the built-in **`RUN_TO_POSITION`** mode.</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">The `RUN_TO_POSITION` Sequence</h3>
+                        <p class="mb-4">Driving to a target requires five mandatory steps. The most important is **Step 4**, where we wait for the motor to reach the target before moving on to the next action in the autonomous sequence.</p>
+                        <h4 class="font-semibold mt-2">FTC Example: Driving 2 Feet (Complete Sequence)</h4>
+                        <pre class="ftc-code"><code>// Ticks calculated from the tool below
+final int TICKS_PER_INCH = 120; // Example value
+int distance_in_inches = 24; // 2 feet
+int ticks_to_travel = distance_in_inches * TICKS_PER_INCH; 
+
+// 1. Calculate and set the new target position
+// The new target is the current position PLUS the distance to travel
+leftMotor.setTargetPosition(leftMotor.getCurrentPosition() + ticks_to_travel);
+rightMotor.setTargetPosition(rightMotor.getCurrentPosition() + ticks_to_travel);
+
+
+// 2. Set the motor mode to RUN_TO_POSITION
+leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+// 3. Start the motors with a fixed power
+leftMotor.setPower(0.5);
+rightMotor.setPower(0.5);
+
+
+// 4. WAIT: This loop stalls the Auto program until the target is hit
+// The motor reports 'isBusy()' as true while it's moving towards its target.
+while (opModeIsActive() && leftMotor.isBusy()) {
+    telemetry.addData("Current Position", leftMotor.getCurrentPosition());
+    telemetry.update();
+}
+
+// 5. STOP and RESET: Always stop motors and reset the mode after running
+leftMotor.setPower(0);
+rightMotor.setPower(0);
+leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER); // Reset to TeleOp-friendly mode</code></pre>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">Encoder Tick Calculator</h3>
+                        <p class="mb-4 text-sm text-stone-600">The number of ticks per inch is a critical constant for your robot. Use this tool to determine the target ticks for a desired distance, based on your physical components.</p>
+                        <div class="space-y-4">
+                            <div>
+                                <label for="distance" class="block font-medium">Distance to Travel (inches)</label>
+                                <input type="number" id="distance" value="24" class="w-full p-2 border border-stone-300 rounded-md mt-1">
+                            </div>
+                            <div>
+                                <label for="tpr" class="block font-medium">Motor Ticks Per Revolution (TPR)</label>
+                                <input type="number" id="tpr" value="537.7" class="w-full p-2 border border-stone-300 rounded-md mt-1">
+                            </div>
+                            <div>
+                                <label for="wheel-dia" class="block font-medium">Wheel Diameter (inches)</label>
+                                <input type="number" id="wheel-dia" value="4.0" class="w-full p-2 border border-stone-300 rounded-md mt-1">
+                            </div>
+                        </div>
+                        <div class="mt-6 text-center">
+                            <p class="text-stone-600">Required Encoder Ticks:</p>
+                            <p id="result-ticks" class="text-3xl font-bold text-orange-600 mt-1"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Day 6: Working with Sensors (Expanded) -->
+            <div id="day6" class="content-card">
+                 <h2 class="text-4xl font-bold mb-2">Day 6: Working with Sensors for Decision-Making</h2>
+                 <p class="text-lg text-stone-600 mb-4">Sensors are the robot's inputs, allowing it to react to the environment. They can be categorized as **Digital** (simple ON/OFF) or **Analog** (returning a range of values).</p>
+                 <p class="mb-8">We use `if` statements and logical operators to interpret sensor readings and drive actions in both Autonomous and TeleOp modes.</p>
+                 
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">1. Digital Sensors (Touch/Limit Switches)</h3>
+                        <p class="mb-4">Touch sensors are **Digital** and only return a `boolean` state. In the FTC SDK, many touch sensors are wired to return **`false` when pressed** (grounded) and `true` when released. This is a common point of confusion!</p>
+                        <h4 class="font-semibold mt-2">FTC Example: Two-Stage Lift Control</h4>
+                        <p class="text-sm mb-2 text-stone-600">Use multiple touch sensors to define the **minimum and maximum** extension of a linear slide.</p>
+                        <pre class="ftc-code"><code>// Declaration and initialization assumed...
+// DigitalChannel bottomLimit, topLimit;
+
+// Inside the TeleOp loop:
+double liftPower = gamepad2.left_stick_y;
+
+if (bottomLimit.getState() == false && liftPower < 0) {
+    // Condition 1: If bottom is pressed AND driver tries to drive down
+    liftMotor.setPower(0); // Lock it in place at the bottom
+} else if (topLimit.getState() == false && liftPower > 0) {
+    // Condition 2: If top is pressed AND driver tries to drive up
+    liftMotor.setPower(0); // Lock it in place at the top
+} else {
+    // Otherwise, allow the driver control
+    liftMotor.setPower(liftPower); 
+}</code></pre>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">2. Analog Sensors (Color and Distance)</h3>
+                        <p class="mb-4">These sensors return numerical values. For Color, you get Red, Green, Blue, and Alpha (brightness). For Distance, you get millimeters or inches. The key is finding the right **threshold** value to trigger an action.</p>
+                        <h4 class="font-semibold mt-2">FTC Example: Line Following / Alliance Detection</h4>
+                        <p class="text-sm mb-2 text-stone-600">Instead of just stopping at *any* line, check the color value to ensure you're on the correct alliance color.</p>
+                        <pre class="ftc-code"><code>// Assuming 'colorSensor' is mapped...
+final int BLUE_THRESHOLD = 2000; 
+final int RED_THRESHOLD = 500; // Red value is usually lower in color sensors
+
+// Inside Autonomous (Linear OpMode):
+while (opModeIsActive() && colorSensor.blue() < BLUE_THRESHOLD) {
+    // Keep driving forward until the blue value crosses the threshold
+    leftMotor.setPower(0.2);
+    rightMotor.setPower(0.2);
+    
+    telemetry.addData("Blue Value", colorSensor.blue());
+    telemetry.update();
+}
+// Stop the motors once the line is detected
+leftMotor.setPower(0);
+rightMotor.setPower(0);</code></pre>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Day 7: Advanced TeleOp Techniques (Expanded) -->
+            <div id="day7" class="content-card">
+                <h2 class="text-4xl font-bold mb-2">Day 7: Advanced TeleOp Techniques & PID Intro</h2>
+                <p class="text-lg text-stone-600 mb-4">We'll clean up driver control using a **state machine** pattern for button toggles and introduce **Proportional Control** (the 'P' in PID) to achieve smoother, more reliable robot mechanisms.</p>
+                <p class="mb-8">These techniques differentiate a competitive robot from a basic one by making controls intuitive and movement precise.</p>
+
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">1. State Machines for Mechanisms (Debouncing)</h3>
+                        <p class="mb-4">If you simply check `if (gamepad1.a)` to toggle a claw, the code will open/close the claw 50 times per second while the button is held down (**button bounce**). The solution is a **state machine** that only acts on the moment the button is *first* pressed.</p>
+                        <h4 class="font-semibold">FTC Example: Single-Button Claw Toggle (Debounced)</h4>
+                        <pre class="ftc-code"><code>// Declared outside runOpMode, but tracked inside the loop
+boolean clawIsClosed = true; // State Variable: Tracks the claw's current state
+boolean a_was_pressed = false; // Debounce Variable: Tracks the button's state from the *last* loop iteration
+
+// Inside the TeleOp loop:
+boolean a_is_pressed = gamepad1.a; // Get current button state
+
+if (a_is_pressed && !a_was_pressed) {
+    // 1. ONLY execute this if the button is pressed NOW (a_is_pressed=true) 
+    // AND it was NOT pressed BEFORE (!a_was_pressed=true)
+    clawIsClosed = !clawIsClosed; // Flip the state (toggle the claw position)
+}
+
+// 2. Set the physical servo position based on the stored state
+if (clawIsClosed) {
+    claw.setPosition(0.2); // Close
+} else {
+    claw.setPosition(0.8); // Open
+}
+
+// 3. CRITICAL: Update the previous state for the next loop iteration
+a_was_pressed = a_is_pressed; </code></pre>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">2. Introduction to Proportional (P) Control</h3>
+                        <p class="mb-4">When a motor reaches its target position (like an arm moving to a scoring height), simply cutting power to zero results in a harsh stop and potential overshoot. **Proportional (P) Control** makes the robot's power proportional to the **error** (distance remaining).</p>
+                        <h4 class="font-semibold">P-Control Formula and Concept</h4>
+                        <p class="text-sm mb-2 text-stone-600">The further away the target is, the higher the power. As the robot gets closer, the error shrinks, and the power smoothly decreases, resulting in a gentle, accurate stop.</p>
+                        <pre class="ftc-code"><code>final double KP_GAIN = 0.005; // A small tuning constant (Kp)
+
+// 1. Calculate the Error (The distance left to travel, in ticks)
+int currentPosition = armMotor.getCurrentPosition();
+int error = targetPosition - currentPosition;
+
+// 2. Calculate Power = Error * Kp
+double rawPower = error * KP_GAIN;
+
+// 3. Implement a maximum power cap (to prevent power from exceeding 1.0)
+double motorPower = Math.min(Math.abs(rawPower), 1.0); // Cap at 1.0
+
+// 4. Set motor power, preserving the sign for direction
+armMotor.setPower(Math.signum(rawPower) * motorPower);</code></pre>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-xl border border-stone-200 mt-8">
+                    <h3 class="text-2xl font-semibold mb-4">Visualizing The Learning Curve</h3>
+                    <p class="text-stone-600 mb-4">This chart visualizes the relative complexity of the concepts introduced each day. Note the curve naturally steepens as we move into precise autonomous and advanced control systems.</p>
+                    <div class="chart-container">
+                        <canvas id="complexityChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const navLinks = document.querySelectorAll('.nav-link');
+    const contentCards = document.querySelectorAll('.content-card');
+
+    function setActiveContent(hash) {
+        const targetHash = hash || '#day1';
+        
+        navLinks.forEach(link => {
+            if (link.getAttribute('href') === targetHash) {
+                link.classList.add('bg-orange-100', 'text-orange-700');
+                link.classList.remove('text-stone-600', 'hover:bg-stone-100');
+            } else {
+                link.classList.remove('bg-orange-100', 'text-orange-700');
+                link.classList.add('text-stone-600', 'hover:bg-stone-100');
+            }
+        });
+
+        contentCards.forEach(card => {
+            if ('#' + card.id === targetHash) {
+                card.classList.add('active');
+            } else {
+                card.classList.remove('active');
+            }
+        });
+    }
+
+    document.getElementById('main-nav').addEventListener('click', (e) => {
+        if (e.target.tagName === 'A') {
+            const link = e.target.closest('a');
+            if(link) {
+                 e.preventDefault();
+                 const targetHash = link.getAttribute('href');
+                 window.location.hash = targetHash;
+                 setActiveContent(targetHash);
+            }
+        }
+    });
+
+    setActiveContent(window.location.hash);
+    
+    // Day 1 Lifecycle
+    const lifecycleStages = document.querySelectorAll('.lifecycle-stage');
+    const lifecycleDesc = document.getElementById('lifecycle-desc');
+    lifecycleStages.forEach(stage => {
+        stage.addEventListener('click', () => {
+            lifecycleStages.forEach(s => s.classList.remove('border-orange-500', 'bg-orange-100'));
+            stage.classList.add('border-orange-500', 'bg-orange-100');
+            lifecycleDesc.textContent = stage.dataset.desc;
+            lifecycleDesc.classList.remove('opacity-0');
+        });
+    });
+
+    // Encoder Calculator (Day 5)
+    const distInput = document.getElementById('distance');
+    const tprInput = document.getElementById('tpr');
+    const wheelDiaInput = document.getElementById('wheel-dia');
+    const resultTicks = document.getElementById('result-ticks');
+
+    function calculateTicks() {
+        const distance = parseFloat(distInput.value) || 0;
+        const tpr = parseFloat(tprInput.value) || 0;
+        const diameter = parseFloat(wheelDiaInput.value) || 0;
+        if (diameter === 0 || tpr === 0) {
+            resultTicks.textContent = '---';
+            return;
+        }
+        const circumference = Math.PI * diameter;
+        const revolutions = distance / circumference;
+        const ticks = Math.round(revolutions * tpr);
+        resultTicks.textContent = ticks.toLocaleString();
+    }
+    [distInput, tprInput, wheelDiaInput].forEach(el => el.addEventListener('input', calculateTicks));
+    calculateTicks();
+
+    // Accordions
+    document.querySelectorAll('.accordion-header').forEach(button => {
+        button.addEventListener('click', () => {
+            const accordionContent = button.nextElementSibling;
+            button.classList.toggle('bg-stone-200');
+            if (accordionContent.style.maxHeight) {
+                accordionContent.style.maxHeight = null;
+            } else {
+                accordionContent.style.maxHeight = accordionContent.scrollHeight + "px";
+            } 
+        });
+    });
+
+    // Chart (Updated for 7 days with new topics)
+    const ctx = document.getElementById('complexityChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['Day 1', 'Day 2', 'Day 3', 'Day 4', 'Day 5', 'Day 6', 'Day 7'],
+            datasets: [{
+                label: 'Conceptual Complexity',
+                // Updated complexity: Higher numbers reflect the added depth and complexity of the new content
+                data: [3, 4, 5, 6, 8, 7, 9], 
+                backgroundColor: 'rgba(234, 88, 12, 0.6)',
+                borderColor: 'rgba(234, 88, 12, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Relative Complexity Level (1-10)'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            if (context.parsed.y !== null) {
+                                label += context.parsed.y;
+                            }
+                            return label;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+});
+</script>
+</body>
+</html>
