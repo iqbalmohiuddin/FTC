@@ -127,30 +127,50 @@
                 <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
                     <div class="bg-white p-6 rounded-xl border border-stone-200">
                         <h3 class="text-2xl font-semibold mb-4">3. The FTC Control Flow and Telemetry</h3>
-                        <p class="mb-4">The core of any FTC program (like the sample **BasicOpMode_Linear**) involves three key flow control points that manage the match timer:</p>
+                        <p class="mb-4">The core of any FTC program (like the sample **BasicOpMode_Linear**) involves three key flow control points that manage the match timer. Scroll down in the code sample below to see how the three phases of a match are separated.</p>
                         
                         <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200 mb-2">
-                            <button class="accordion-header w-full text-left p-4 font-semibold">Essential FTC Methods</button>
+                            <button class="accordion-header w-full text-left p-4 font-semibold">Sample: BasicOpMode_Linear Code Structure</button>
                             <div class="accordion-content px-4 pb-4">
-                                <p>When you look at an FTC example, look for these three critical pieces that replace the standard `main()` method:</p>
-                                <ul class="list-disc list-inside ml-4 mt-2 space-y-2">
-                                    <li>**`runOpMode()`:** The main entry point for the code after the Control Hub loads it.</li>
-                                    <li>**`waitForStart()`:** Pauses the program until the START button is pressed on the Driver Station.</li>
-                                    <li>**`while (opModeIsActive())`:** The main loop that runs continuously for the duration of the match.</li>
-                                </ul>
-                            </div>
-                        </div>
-                         <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200">
-                            <button class="accordion-header w-full text-left p-4 font-semibold">Telemetry: Real-time Debugging</button>
-                            <div class="accordion-content px-4 pb-4">
-                                <p>Telemetry is your robot's way of talking to you. It sends data to the Driver Station phone so you can monitor motor power, sensor values, and program status. **Always use telemetry** to debug your code.</p>
-                                <h4 class="font-semibold mt-2">Practice Example: Sending Status</h4>
-                                <p class="text-sm text-stone-600">Running the sample "Basic TeleOp" shows how to display the `Initialized` status:</p>
-                                <pre class="ftc-code"><code>// Display the status string
-telemetry.addData("Status", "Initialized");
+                                <p class="mb-2">This simplified sample shows the **`INIT`**, **`WAITING`**, and **`RUN`** phases of the robot's life, all within the required **`runOpMode()`** method.</p>
+                                <pre class="ftc-code"><code>@TeleOp(name="Basic Linear OpMode", group="Linear OpModes")
+public class BasicOpMode_Linear extends LinearOpMode {
 
-// !!! CRITICAL: You must call update() to send the data to the Driver Station
-telemetry.update();</code></pre>
+    @Override
+    public void runOpMode() {
+        
+        // --- 1. INIT STAGE (Runs once when INIT is pressed) ---
+        // This is where you map hardware and set initial directions.
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
+
+        // --- 2. WAITING STAGE (Pauses until START is pressed) ---
+        waitForStart();
+        
+        // This check ensures we only proceed if the user hasn't pressed STOP
+        if (opModeIsActive()) {
+
+            // --- 3. RUN STAGE (This loop runs continuously for the match duration) ---
+            while (opModeIsActive()) {
+                
+                // Get joystick input (example for a drive system)
+                double drive = -gamepad1.left_stick_y; 
+                
+                // In a real OpMode, motor power would be set here
+                // motor.setPower(drive); 
+
+                // Send data to the Driver Station
+                telemetry.addData("Status", "Running");
+                telemetry.addData("Drive Power", drive);
+                telemetry.update(); // CRITICAL: Sends data to the driver station
+            }
+        }
+        // When the loop exits (by pressing STOP), the OpMode finishes.
+    }
+}</code></pre>
+
+                                <h4 class="font-semibold mt-4">Telemetry: Real-time Debugging</h4>
+                                <p><strong>Telemetry</strong> is your robot's way of talking to you. It sends data (like motor power, sensor values, and program status) to the Driver Station phone. You must call **`telemetry.update()`** to transmit the data over the Wi-Fi network.</p>
                             </div>
                         </div>
                     </div>
