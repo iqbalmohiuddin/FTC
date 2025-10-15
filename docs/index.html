@@ -98,30 +98,30 @@ Ask:
 
 Java is like English for robots — you tell the robot what to do, but you must follow Java’s grammar rules.
           </p>
- <p class="mb-3"> 
-                    Let’s look at the structure of a simple Java program.
 
-✍️ Code Example:
-public class HelloWorld {
+  <!-- INSERTED CONTENT START -->
+                    <h4 class="font-semibold mt-4">The Anatomy of a Basic Java Program</h4>
+                    <div class="bg-white p-4 rounded-lg border border-stone-200">
+                        <h5 class="text-lg font-semibold mb-2">Code Example: <span class="font-mono">HelloWorld.java</span></h5>
+                        <pre class="ftc-code"><code>public class HelloWorld {
     public static void main(String[] args) {
         System.out.println("Hello, FTC Team!");
     }
-}
+}</code></pre>
 
-🧩 Explain Line by Line:
+                        <h5 class="text-lg font-semibold mt-3 mb-2">Line-by-Line Breakdown</h5>
+                        <ul class="list-none space-y-2 text-sm">
+                            <li><span class="font-mono text-orange-600">public class HelloWorld</span>: Defines a **class** named `HelloWorld`. Every Java program starts with a class.</li>
+                            <li><span class="font-mono text-orange-600">{ }</span>: **Curly braces** group related code together. Everything inside belongs to the class or method.</li>
+                            <li><span class="font-mono text-orange-600">public static void main(String[] args)</span>: This is the **main method** — Java starts running your code here (in normal applications, *not* in FTC).</li>
+                            <li><span class="font-mono text-orange-600">System.out.println("Hello, FTC Team!");</span>: Prints text to the screen (the console).</li>
+                        </ul>
+                    </div>
+                    <p class="mt-4 text-stone-700">This standard structure is how general Java programs start. However, the FTC system uses a **specialized** structure, which we cover next!</p>
+                    <!-- INSERTED CONTENT END -->
 
-public class HelloWorld
-→ Defines a class named HelloWorld. Every Java program starts with a class.
 
-{ }
-→ Curly braces group related code together. Everything between { and } belongs to the class.
-
-public static void main(String[] args)
-→ This is the main method — Java starts running your code here.
-
-System.out.println("Hello, FTC Team!");
-→ Prints text to the screen (the console).
- </p>  
+                    
                     <h4 class="font-semibold mt-2">How FTC Java Works (The Key Difference)</h4>
                     <p>FTC programs **don't use `main()`!** Instead, they **extend** special classes like `LinearOpMode` or `OpMode` and use pre-defined methods (`runOpMode`, `init`, `loop`) as their starting point. The FTC system (the Control Hub) handles the startup process for you.</p>
 
