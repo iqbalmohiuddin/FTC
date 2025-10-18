@@ -81,25 +81,10 @@
                 <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 mb-8">
                     <h3 class="text-2xl font-semibold text-blue-700 mb-4">1. Programming Basics and Java Structure</h3>
                     
-                    <h4 class="font-semibold mt-2">What is Programming?</h4>
+                    <h4 class="font-semibold mt-4">What is Programming?</h4>
                     <p class="mb-3">Programming means giving the robot **instructions it can follow exactly**. The language we use to communicate with the robot brain (**Control Hub**) is **Java**.</p>
-<p class="mb-3">
-Programming is how we give instructions to a computer (or robot) to make it do what we want.
-In FTC, we program our robot controller phone (the “brain” of the robot) to control motors, servos, and sensors.
-<br>
-🧩 Example:
-
-Ask:
-
-“If I tell you: Go forward 3 steps, turn right, and pick up a cone — that’s exactly what our robot needs to do. But we must tell it in a language it understands — Java!”
-</p> <br>
-          <p class="mb-3">          
-                    🧩 Analogy:
-
-Java is like English for robots — you tell the robot what to do, but you must follow Java’s grammar rules.
-          </p>
-
-  <!-- INSERTED CONTENT START -->
+                    
+                    <!-- INSERTED CONTENT START -->
                     <h4 class="font-semibold mt-4">The Anatomy of a Basic Java Program</h4>
                     <div class="bg-white p-4 rounded-lg border border-stone-200">
                         <h5 class="text-lg font-semibold mb-2">Code Example: <span class="font-mono">HelloWorld.java</span></h5>
@@ -120,9 +105,7 @@ Java is like English for robots — you tell the robot what to do, but you must 
                     <p class="mt-4 text-stone-700">This standard structure is how general Java programs start. However, the FTC system uses a **specialized** structure, which we cover next!</p>
                     <!-- INSERTED CONTENT END -->
 
-
-                    
-                    <h4 class="font-semibold mt-2">How FTC Java Works (The Key Difference)</h4>
+                    <h4 class="font-semibold mt-4">How FTC Java Works (The Key Difference)</h4>
                     <p>FTC programs **don't use `main()`!** Instead, they **extend** special classes like `LinearOpMode` or `OpMode` and use pre-defined methods (`runOpMode`, `init`, `loop`) as their starting point. The FTC system (the Control Hub) handles the startup process for you.</p>
 
                     <h4 class="font-semibold mt-4">The Control System Overview</h4>
@@ -269,20 +252,235 @@ public class BasicOpMode_Iterative extends OpMode {
             <!-- Day 2: Variables & Methods -->
             <div id="day2" class="content-card">
                 <h2 class="text-4xl font-bold mb-2">Day 2: Variables, Methods, & Hardware Mapping</h2>
-                <p class="text-lg text-stone-600 mb-4">We are diving into the basic building blocks of Java: **variables** (to store data) and **methods** (to perform actions). We'll focus heavily on how these concepts apply to connecting to your physical hardware.</p>
-                <p class="mb-8">A **variable** must be declared with a **Type** (like `DcMotor` or `double`) so the Java compiler knows what kind of data it will hold and what actions it can perform.</p>
+                <p class="text-lg text-stone-600 mb-4">We are diving into the basic building blocks of Java: **variables** (to store data) and **methods** (to perform actions). This lesson focuses on using variables to control your robot's actions efficiently.</p>
                 
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                     
-                    <div class="lg:col-span-2 bg-white p-6 rounded-xl border border-stone-200">
-                        <h3 class="text-2xl font-semibold mb-4">1. Variables and Hardware Mapping</h3>
-                        <p class="mb-4">**Hardware Mapping** is the process of linking a variable in your code to a physical device plugged into the Control Hub. We use the special **`hardwareMap`** object to look up the device by the name you set in the configuration.</p>
+                <!-- 1. Warm-Up: “The Backpack Analogy” -->
+                <div class="bg-blue-50 p-6 rounded-xl border border-blue-200 mb-8">
+                    <h3 class="text-2xl font-semibold text-blue-700 mb-4">1. Warm-Up: The Backpack Analogy 🎒</h3>
+                    <p class="mb-3">Imagine your brain as a backpack. You keep important stuff inside it. In programming, a **variable** is just like a labeled pocket in that backpack — it stores something for later use.</p>
+                    
+                    <h4 class="font-semibold mt-4">Example: Storing Items</h4>
+                    <p class="mb-2">A pocket labeled `pencil` holds the value `1` (one pencil). In Java, we do the same:</p>
+                    <pre class="ftc-code"><code>int pencil = 1; // "I have 1 pencil."</code></pre>
+
+                    <p class="mb-2 mt-4">For other items you might store (apples 🍎, books 📚, snacks 🍪):</p>
+                    <pre class="ftc-code"><code>int apples = 3;
+int books = 5;
+int snacks = 2;</code></pre>
+                </div>
+                
+                <!-- 2. What Are Variables? -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 mb-8">
+                    <h3 class="text-2xl font-semibold mb-4">2. What Are Variables?</h3>
+                    <p class="mb-4">Variables are containers that store information your program needs. In FTC, variables help you remember things like the speed of your motors, the position of your servos, or whether a sensor is triggered.</p>
+                    
+                    <h4 class="font-semibold mt-4">Java Declaration Example</h4>
+                    <pre class="ftc-code"><code>int motorPower = 50;
+double armPosition = 0.75;
+boolean isButtonPressed = false;
+String robotName = "FalconBot";</code></pre>
+                    
+                    <h4 class="font-semibold mt-4">Variable Breakdown Table</h4>
+                    <div class="overflow-x-auto mt-4">
+                        <table class="min-w-full divide-y divide-stone-200 rounded-lg overflow-hidden">
+                            <thead class="bg-stone-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Variable</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Type</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Meaning</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Real-life Analogy</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-stone-200 text-sm">
+                                <tr>
+                                    <td class="px-4 py-2 font-mono">motorPower</td>
+                                    <td class="px-4 py-2">int</td>
+                                    <td class="px-4 py-2">Power of the robot motor</td>
+                                    <td class="px-4 py-2">Dial on a remote controller</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-mono">armPosition</td>
+                                    <td class="px-4 py-2">double</td>
+                                    <td class="px-4 py-2">Servo angle (0.0 to 1.0)</td>
+                                    <td class="px-4 py-2">Lifting your arm halfway up</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-mono">isButtonPressed</td>
+                                    <td class="px-4 py-2">boolean</td>
+                                    <td class="px-4 py-2">True or False value</td>
+                                    <td class="px-4 py-2">Is the start button pressed?</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-mono">robotName</td>
+                                    <td class="px-4 py-2">String</td>
+                                    <td class="px-4 py-2">Text information</td>
+                                    <td class="px-4 py-2">Name tag on your robot</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <!-- 3. Data Types -->
+                <div class="bg-orange-50 p-6 rounded-xl border border-orange-200 mb-8">
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-4">3. Essential FTC Data Types</h3>
+                    <p class="mb-4">Java needs to know what kind of data you’re storing so it can use it correctly. Here are the 4 most common data types in FTC Java:</p>
+
+                    <div class="overflow-x-auto mt-4">
+                        <table class="min-w-full divide-y divide-orange-200 rounded-lg overflow-hidden">
+                            <thead class="bg-orange-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Data Type</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Description</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">FTC Example</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-orange-200 text-sm">
+                                <tr>
+                                    <td class="px-4 py-2 font-mono text-orange-600">int</td>
+                                    <td class="px-4 py-2">Whole number (no decimals)</td>
+                                    <td class="px-4 py-2">Motor encoder counts, team number</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-mono text-orange-600">double</td>
+                                    <td class="px-4 py-2">Decimal number (crucial for precision)</td>
+                                    <td class="px-4 py-2">Motor power (0.0 to 1.0), servo position, sensor distance</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-mono text-orange-600">boolean</td>
+                                    <td class="px-4 py-2">True or False value (logic)</td>
+                                    <td class="px-4 py-2">Is a sensor pressed? Is the robot running?</td>
+                                </tr>
+                                <tr>
+                                    <td class="px-4 py-2 font-mono text-orange-600">String</td>
+                                    <td class="px-4 py-2">Text information</td>
+                                    <td class="px-4 py-2">Robot name, driver name</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- 4. Operators -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 mb-8">
+                    <h3 class="text-2xl font-semibold mb-4">4. Operators: Doing Math in Java</h3>
+                    <p class="mb-4">Just like math class, Java can add, subtract, multiply, or divide numbers stored in variables. This is how we calculate things like total distance or scale joystick input.</p>
+
+                    <h4 class="font-semibold">Arithmetic Operators Summary</h4>
+                    <div class="overflow-x-auto mt-2 mb-4">
+                        <table class="min-w-full divide-y divide-stone-200 rounded-lg overflow-hidden">
+                            <thead class="bg-stone-100">
+                                <tr>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Operator</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Symbol</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Example</th>
+                                    <th class="px-4 py-2 text-left text-xs font-medium text-stone-500 uppercase tracking-wider">Result</th>
+                                </tr>
+                            </thead>
+                            <tbody class="bg-white divide-y divide-stone-200 text-sm">
+                                <tr><td class="px-4 py-2">Add</td><td class="px-4 py-2 font-mono text-orange-600">+</td><td class="px-4 py-2 font-mono">3 + 2</td><td class="px-4 py-2">5</td></tr>
+                                <tr><td class="px-4 py-2">Subtract</td><td class="px-4 py-2 font-mono text-orange-600">-</td><td class="px-4 py-2 font-mono">7 - 4</td><td class="px-4 py-2">3</td></tr>
+                                <tr><td class="px-4 py-2">Multiply</td><td class="px-4 py-2 font-mono text-orange-600">*</td><td class="px-4 py-2 font-mono">5 * 2</td><td class="px-4 py-2">10</td></tr>
+                                <tr><td class="px-4 py-2">Divide</td><td class="px-4 py-2 font-mono text-orange-600">/</td><td class="px-4 py-2 font-mono">10 / 2</td><td class="px-4 py-2">5</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <h4 class="font-semibold mt-4">FTC Example: Calculating Distance</h4>
+                    <p class="mb-2">If your robot moves forward for 3 seconds, and each second it moves 20 cm:</p>
+                    <pre class="ftc-code"><code>int distanceEachSecond = 20;
+int totalTime = 3;
+int totalDistance = distanceEachSecond * totalTime; // 20 * 3 = 60
+
+telemetry.addData("Distance traveled", totalDistance + " cm");</code></pre>
+                </div>
+
+                <!-- 5. FTC Robot Example: Controlling Power with Variables -->
+                <div class="bg-red-50 p-6 rounded-xl border border-red-200 mb-8">
+                    <h3 class="text-2xl font-semibold text-red-700 mb-4">5. FTC Robot Example: Variables in Action (Code)</h3>
+                    <p class="mb-4">We use variables to control our motors. This is the foundation of driving the robot based on joystick input.</p>
+
+                    <h4 class="font-semibold">Example: Using a Variable for Motor Power</h4>
+                    <pre class="ftc-code"><code>@TeleOp(name="MotorPowerExample", group="Tutorial")
+public class MotorPowerExample extends LinearOpMode {
+
+    DcMotor leftMotor;
+
+    @Override
+    public void runOpMode() {
+        leftMotor = hardwareMap.get(DcMotor.class, "left_drive");
+
+        double power = 0.5;  // &lt;-- variable that stores motor power
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+            leftMotor.setPower(power); // &lt;-- use the variable here
+            telemetry.addData("Motor Power", power);
+            telemetry.update();
+        }
+    }
+}</code></pre>
+                    <p class="mt-4 text-stone-700">Using the variable `power` (instead of typing `0.5` directly) makes the code much easier to update later, especially when we start connecting it to joystick input!</p>
+                </div>
+                
+                <!-- 6 & 7. Practice and Review -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="text-2xl font-semibold mb-4">6. Practice: Variables and Booleans</h3>
                         
-                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200 mb-4">
-                            <button class="accordion-header w-full text-left p-4 font-semibold">Example: Mapping a Motor and a Servo</button>
-                            <div class="accordion-content px-4 pb-4">
-                                <p>Notice how we use **`.get(Type.class, "name")`**. The Type tells Java what kind of device to expect, and the name must match your configuration exactly.</p>
-                                <pre class="ftc-code"><code>// 1. DECLARE the variables (fields) outside the main method
+                        <h4 class="font-semibold mt-2">Activity 1: The Robot Speed Challenge</h4>
+                        <p class="mb-2 text-sm text-stone-600">By changing the value of the `speed` variable, you can instantly change the robot's driving speed without editing the motor control line.</p>
+                        <pre class="ftc-code"><code>double speed = 0.3; // Change this value!
+// ... later in the loop: motor.setPower(speed);</code></pre>
+                        
+                        <h4 class="font-semibold mt-4">Activity 2: Boolean Sensor Example</h4>
+                        <p class="mb-2 text-sm text-stone-600">A **boolean** is a powerful way to represent the state of a sensor (like a touch sensor being pressed) or a condition.</p>
+                        <pre class="ftc-code"><code>boolean touchPressed = false;
+
+// Imagine the robot hits the wall, and the sensor changes the value:
+touchPressed = true; 
+
+if (touchPressed) {
+    telemetry.addData("Alert", "Wall detected!");
+} else {
+    telemetry.addData("Alert", "Clear path!");
+}
+telemetry.update();</code></pre>
+                    </div>
+
+                    <div class="bg-white p-6 rounded-xl border border-stone-200">
+                        <h3 class="2xl font-semibold mb-4">7. Review & Homework</h3>
+                        
+                        <h4 class="font-semibold mt-2">Coach-led Recap Questions:</h4>
+                        <ul class="list-disc list-inside ml-4 space-y-1 text-sm text-stone-700">
+                            <li>What is a variable? (A labeled container for data)</li>
+                            <li>What's the difference between **`int`** (whole number) and **`double`** (decimal number)?</li>
+                            <li>What type of variable would you use to store your robot’s name? (`String`)</li>
+                            <li>How can a **`boolean`** help your robot make decisions? (True/False logic)</li>
+                        </ul>
+
+                        <h4 class="font-semibold mt-6">Mini Challenge (Homework 🏠)</h4>
+                        <p class="mb-2 text-sm text-stone-600">Create a new OpMode that defines these three variables and displays them all using telemetry:</p>
+                        <pre class="ftc-code"><code>String driverName = "Your Name Here";
+int teamNumber = 9999;
+double speed = 0.5;
+
+// Display all on telemetry...
+// ...
+</code></pre>
+                    </div>
+                </div>
+                
+                <!-- Re-adding the original hardware mapping section as it is still crucial -->
+                <div class="bg-white p-6 rounded-xl border border-stone-200 mt-8">
+                    <h3 class="text-2xl font-semibold mb-4">BONUS: Hardware Mapping Review</h3>
+                    <p class="mb-4">Before we continue, remember that variables are used to store the hardware itself! **Hardware Mapping** is the process of linking a variable in your code to a physical device plugged into the Control Hub.</p>
+                    <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200 mb-4">
+                        <button class="accordion-header w-full text-left p-4 font-semibold">Mapping a Motor and a Servo</button>
+                        <div class="accordion-content px-4 pb-4">
+                            <p>Notice how we use **`.get(Type.class, "name")`**. The Type tells Java what kind of device to expect, and the name must match your configuration exactly.</p>
+                            <pre class="ftc-code"><code>// 1. DECLARE the variables (fields) outside the main method
 private DcMotor leftMotor = null; // DcMotor is the type for drive motors
 private Servo clawServo = null; // Servo is the type for continuous or standard servos
 
@@ -293,27 +491,6 @@ clawServo = hardwareMap.get(Servo.class, "claw");
 // 3. Set Motor Direction (Crucial!)
 // This ensures setting a positive power moves the robot forward.
 leftMotor.setDirection(DcMotorSimple.Direction.REVERSE);</code></pre>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-white p-6 rounded-xl border border-stone-200">
-                        <h3 class="text-2xl font-semibold mb-4">2. Methods: Actions for the Robot</h3>
-                        <p class="mb-4">Methods are like commands. A **`DcMotor`** variable has many methods (actions) built into it, like `setPower()` or `setTargetPosition()`. You call a method using the **dot operator (`.`)** after the variable name.</p>
-                        
-                        <div class="accordion-item bg-stone-50 rounded-lg border border-stone-200">
-                            <button class="accordion-header w-full text-left p-4 font-semibold">FTC Example: Motor vs. Servo Control</button>
-                            <div class="accordion-content px-4 pb-4">
-                                <p>Motors use `setPower()` (ranging from -1.0 to 1.0) for continuous movement, while Servos use `setPosition()` (ranging from 0.0 to 1.0) for angular position.</p>
-                                <pre class="ftc-code"><code>// Action 1: Motor Power (Robot driving forward)
-leftMotor.setPower(0.75); // 75% power forward
-
-// Action 2: Servo Position (Claw closing)
-clawServo.setPosition(0.2); // Setting position to 0.2 (e.g., closed)
-
-// Action 3: Stopping a motor
-leftMotor.setPower(0.0); // Power of 0.0 stops the motor immediately</code></pre>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -355,7 +532,7 @@ final boolean IS_RED_ALLIANCE = true;</code></pre>
                     </div>
                     
                     <div class="bg-white p-6 rounded-xl border border-stone-200">
-                        <h3 class="text-2xl font-semibold mb-4">Logical Operators: Making Complex Decisions</h3>
+                        <h3 class="2xl font-semibold mb-4">Logical Operators: Making Complex Decisions</h3>
                         <p class="mb-4">While arithmetic operators (`+`, `-`, `*`, `/`) handle math, **Logical Operators** (`&&`, `||`, `!`) combine or negate `boolean` conditions to make more sophisticated decisions.</p>
                         
                         <h4 class="font-semibold mt-2">1. Logical AND (`&&`)</h4>
